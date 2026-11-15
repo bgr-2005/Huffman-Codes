@@ -165,16 +165,86 @@ public class HuffmanTree implements BSTInt{
         generateCodesRecursive(node._right, currentCode + "1");
     }
 
+
+
+
+
     // Helper class to store a symbol and its corresponding binary code
     class HuffmanCodeEntry {
         String symbol;
         String code;
+        int frequency;
 
+        // Constructor with frequency (used for stats)
+        public HuffmanCodeEntry(String symbol, String code, int frequency) {
+            this.symbol = symbol;
+            this.code = code;
+            this.frequency = frequency;
+        }
+
+        // Constructor without frequency (if you just want symbol and code)
         public HuffmanCodeEntry(String symbol, String code) {
             this.symbol = symbol;
             this.code = code;
+            this.frequency = 0;
         }
     }
+
+    public void printCompressionStats() {
+        if (_root == null) {
+            System.out.println("The tree is empty.");
+            return;
+        }
+
+        ArrayList<HuffmanCodeEntry> entries = new ArrayList<>();
+        collectStatsRecursive(_root, "", entries);
+
+        int totalFrequency = 0;
+        int weightedCodeLengthSum = 0;
+        int unweightedCodeLengthSum = 0;
+        int numberOfSymbols = entries.size();
+
+        for (HuffmanCodeEntry entry : entries) {
+            totalFrequency += entry.frequency;
+            weightedCodeLengthSum += (entry.frequency * entry.code.length());
+            unweightedCodeLengthSum += entry.code.length();
+        }
+
+        // 1. Huffman Averages
+        double weightedAvgBits = (totalFrequency == 0) ? 0.0 : (double) weightedCodeLengthSum / totalFrequency;
+        double unweightedAvgBits = (numberOfSymbols == 0) ? 0.0 : (double) unweightedCodeLengthSum / numberOfSymbols;
+
+        // 2. Uncompressed Fixed-Length Bits per Symbol: ceil(log2(N))
+        int fixedBitsPerSymbol = (numberOfSymbols <= 1) ? 1 : (int) Math.ceil(Math.log(numberOfSymbols) / Math.log(2));
+
+        System.out.println("--- Huffman Compression Statistics ---");
+        System.out.println("Total Unique Symbols (N): " + numberOfSymbols);
+        System.out.println("Uncompressed Fixed-Length Bits/Symbol: " + fixedBitsPerSymbol + " bits");
+        System.out.println("Weighted Huffman Avg Bits/Symbol: " + String.format("%.2f", weightedAvgBits) + " bits");
+        System.out.println("Unweighted Code Length Avg: " + String.format("%.2f", unweightedAvgBits) + " bits" + "\n");
+        
+        if (fixedBitsPerSymbol > 0) {
+            double compressionSavings = ((fixedBitsPerSymbol - weightedAvgBits) / fixedBitsPerSymbol) * 100;
+            System.out.println("Estimated Space Savings: " + String.format("%.1f", compressionSavings) + "%");
+        }
+    }
+
+    // Recursive helper to gather frequency and code length for each leaf
+    private void collectStatsRecursive(Node node, String currentCode, ArrayList<HuffmanCodeEntry> entries) {
+        if (node == null) {
+            return;
+        }
+
+        if (node._left == null && node._right == null) {
+            entries.add(new HuffmanCodeEntry(node._symbol, currentCode, node._value));
+            return;
+        }
+
+        collectStatsRecursive(node._left, currentCode + "0", entries);
+        collectStatsRecursive(node._right, currentCode + "1", entries);
+    }
+
+
 
     // Public entry point to print codes sorted by length (shortest to longest)
     public void printCodesSorted() {
@@ -199,6 +269,7 @@ public class HuffmanTree implements BSTInt{
         for (HuffmanCodeEntry entry : entries) {
             System.out.println(entry.symbol + " : " + entry.code + " (length: " + entry.code.length() + ")");
         }
+        System.out.print("\n"); 
     }
 
     // Recursive helper to gather all leaf nodes and their codes into a list
@@ -207,9 +278,9 @@ public class HuffmanTree implements BSTInt{
             return;
         }
 
-        // If it's a leaf node, add it to our list
+        // If it's a leaf node, add it to our list with its symbol, code, and frequency value
         if (node._left == null && node._right == null) {
-            entries.add(new HuffmanCodeEntry(node._symbol, currentCode));
+            entries.add(new HuffmanCodeEntry(node._symbol, currentCode, node._value));
             return;
         }
 
@@ -246,6 +317,7 @@ public class HuffmanTree implements BSTInt{
             printTreeRecursive(prefix + (isLeft ? "│   " : "    "), node._left, false);
         }
     }
+
 
 }
 
