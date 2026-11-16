@@ -123,6 +123,7 @@ public class HuffmanTree implements BSTInt{
         Queue<Node> queue = new ArrayDeque<>();
         queue.add(_root);
 
+        System.out.print("\n");
         while (!queue.isEmpty()) {
             Node current = queue.remove();
             Node node = current;
@@ -137,6 +138,8 @@ public class HuffmanTree implements BSTInt{
                 queue.add(node._right);
             }
         }
+        System.out.println("\n");
+
     }
 
     public void printHuffmanEncoding() { 
@@ -221,12 +224,13 @@ public class HuffmanTree implements BSTInt{
         System.out.println("Total Unique Symbols (N): " + numberOfSymbols);
         System.out.println("Uncompressed Fixed-Length Bits/Symbol: " + fixedBitsPerSymbol + " bits");
         System.out.println("Weighted Huffman Avg Bits/Symbol: " + String.format("%.2f", weightedAvgBits) + " bits");
-        System.out.println("Unweighted Code Length Avg: " + String.format("%.2f", unweightedAvgBits) + " bits" + "\n");
+        System.out.println("Unweighted Code Length Avg: " + String.format("%.2f", unweightedAvgBits) + " bits" );
         
         if (fixedBitsPerSymbol > 0) {
             double compressionSavings = ((fixedBitsPerSymbol - weightedAvgBits) / fixedBitsPerSymbol) * 100;
-            System.out.println("Estimated Space Savings: " + String.format("%.1f", compressionSavings) + "%");
+            System.out.println("Estimated Space Savings: " + String.format("%.1f", compressionSavings) + "%\n" );
         }
+
     }
 
     // Recursive helper to gather frequency and code length for each leaf
