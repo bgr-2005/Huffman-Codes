@@ -1,8 +1,10 @@
 # Huffman-Codes
 
+link to presentation slides: https://docs.google.com/presentation/d/1wQ374kG4ybfPRrwzd3dVcxwV_QwMYuGZcyiete_gD28/edit?usp=sharing 
+
 Huffman coding is a lossless data compression algorithm. It aims to minimize the number of bits used to represent each symbol by assigning common symbols to shorter bit encodings. Huffman coding is optimal among methods of encoding symbols separately, but not among all compression methods. 
 
-Still used as one step within a larger compression algorithm. Used in PNG, JPEG, and GZIP. 
+Huffman Coding is used as one step within a larger compression algorithm. Used in PNG, JPEG, and GZIP. 
 
 Basic steps for how it works: 
 
